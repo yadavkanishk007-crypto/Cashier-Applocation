@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+<style>
+  body {
+    background: linear-gradient(135deg, #6B73FF 0%, #FFCC00 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  .signup-card {
+    background: white;
+    padding: 2.5rem 2rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    width: 100%;
+    max-width: 450px;
+    transition: box-shadow 0.3s ease;
+  }
+  .signup-card:hover {
+    box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+  }
+  .signup-card h2 {
+    color: #222;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  .form-control {
+    border-radius: 8px;
+    border: 1.5px solid #ddd;
+    padding-left: 2.75rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .form-control:focus {
+    border-color: #4a6cf7;
+    box-shadow: 0 0 8px #4a6cf7aa;
+    outline: none;
+  }
+  .input-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+    font-size: 1.2rem;
+  }
+  .form-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+  }
+  .btn-success {
+    border-radius: 8px;
+    font-weight: 600;
+    padding: 0.6rem;
+    font-size: 1.1rem;
+    background: #28a745;
+    border: none;
+    transition: background-color 0.3s ease;
+  }
+  .btn-success:hover {
+    background: #1e7e34;
+  }
+  .text-center a {
+    color: #4a6cf7;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .text-center a:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<div class="signup-card">
+  <h2>Create a New Account</h2>
+  <form method="POST" action="{{ url_for('signup') }}" novalidate>
+    
+    <div class="form-group">
+      <span class="input-icon"><i class="bi bi-person-fill"></i></span>
+      <input type="text" class="form-control" id="username" name="username" placeholder="Choose username" required autofocus autocomplete="username" aria-label="Username">
+    </div>
+
+    <div class="form-group">
+      <span class="input-icon"><i class="bi bi-lock-fill"></i></span>
+      <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required autocomplete="new-password" aria-label="Password">
+    </div>
+
+    <div class="form-group">
+      <span class="input-icon"><i class="bi bi-lock-fill"></i></span>
+      <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm password" required autocomplete="new-password" aria-label="Confirm Password">
+    </div>
+
+    <button type="submit" class="btn btn-success w-100">Sign Up</button>
+  </form>
+
+  <p class="mt-4 text-center text-muted" style="font-size: 0.9rem;">
+    Already have an account? <a href="{{ url_for('login') }}">Login here</a>.
+  </p>
+</div>
+
+<!-- Bootstrap Icons CDN for icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+{% endblock %}

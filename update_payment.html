@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Edit Payment{% endblock %}
+
+{% block content %}
+<h2>Edit Payment</h2>
+<form method="POST" action="{{ url_for('update_payment', id=payment.PayID) }}">
+  <div class="mb-3">
+    <label for="member_name" class="form-label">Member</label>
+    <input type="text" class="form-control" id="member_name" value="{{ payment.Name }}" disabled />
+  </div>
+  <div class="mb-3">
+    <label for="month" class="form-label">Month</label>
+    <input type="text" class="form-control" id="month" name="month" value="{{ payment.Month }}" required />
+  </div>
+  <div class="mb-3">
+    <label for="amount" class="form-label">Amount</label>
+    <input type="number" step="0.01" min="0" class="form-control" id="amount" name="amount" value="{{ payment.Amount }}" required />
+  </div>
+  <button type="submit" class="btn btn-primary">Update Payment</button>
+  <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

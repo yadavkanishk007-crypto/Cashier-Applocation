@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+
+  <!-- Top Bar: Home Icon + Search + Send Reminders -->
+  <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+    <!-- Home Icon -->
+    <a href="{{ url_for('index') }}" class="btn btn-outline-primary d-flex align-items-center gap-1" title="Home">
+      <i class="bi bi-house-door-fill fs-5"></i> Home
+    </a>
+
+    <!-- Search Bar -->
+    <form method="GET" action="{{ url_for('index') }}" class="flex-grow-1 mx-2">
+      <div class="input-group shadow-sm">
+        <input type="text" name="search" class="form-control" placeholder="Search by name, month, amount or year..." value="{{ search }}">
+        <button class="btn btn-outline-primary" type="submit">Search</button>
+        {% if search %}
+        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">Clear</a>
+        {% endif %}
+      </div>
+    </form>
+
+    <!-- Send Reminders Button -->
+    <a href="{{ url_for('send_reminders') }}" class="btn btn-warning d-flex align-items-center gap-1">
+      <i class="bi bi-bell-fill"></i> Send Payment Reminders
+    </a>
+  </div>
+
+  <!-- Members Section -->
+  <div class="card mb-4 shadow">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h5 class="mb-0"><i class="bi bi-people-fill me-2"></i>Members</h5>
+      <button class="btn btn-light btn-sm" data-bs-toggle="collapse" data-bs-target="#addMemberForm">+ Add Member</button>
+    </div>
+    <div class="card-body">
+      {% if members %}
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for member in members %}
+            <tr>
+              <td>{{ member.ID }}</td>
+              <td>{{ member.Name }}</td>
+              <td>{{ member.Email }}</td>
+              <td>{{ member.Phone }}</td>
+              <td>
+                <form method="POST" action="{{ url_for('delete_member', member_id=member.ID) }}" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this member?');">
+                  <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i> Delete</button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+        <p class="text-muted">No members found.</p>
+      {% endif %}
+
+      <!-- Add Member Form -->
+      <div class="collapse mt-4" id="addMemberForm">
+        <h6 class="fw-bold mb-3">Add New Member</h6>
+        <form method="POST" action="{{ url_for('add_member') }}">
+          <div class="mb-3">
+            <label class="form-label">Name</label>
+            <input type="text" name="name" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Phone</label>
+            <input type="text" name="phone" class="form-control">
+          </div>
+          <button type="submit" class="btn btn-primary">Add Member</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payments Section -->
+  <div class="card mb-4 shadow">
+    <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+      <h5 class="mb-0"><i class="bi bi-cash-stack me-2"></i>Payments</h5>
+      <button class="btn btn-light btn-sm" data-bs-toggle="collapse" data-bs-target="#addPaymentForm">+ Add Payment</button>
+    </div>
+    <div class="card-body">
+      {% if payments %}
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>PayID</th>
+              <th>Member ID</th>
+              <th>Name</th>
+              <th>Month</th>
+              <th>Amount</th>
+              <th>Pay Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for payment in payments %}
+            <tr>
+              <td>{{ payment.PayID }}</td>
+              <td>{{ payment.MemberID }}</td>
+              <td>{{ payment.Name }}</td>
+              <td>{{ payment.Month }}</td>
+              <td><span class="badge bg-info text-dark">₹{{ "%.2f"|format(payment.Amount) }}</span></td>
+              <td>{{ payment.PayDate.strftime('%Y-%m-%d') if payment.PayDate else '' }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+        <p class="text-muted">No payments found.</p>
+      {% endif %}
+
+      <!-- Add Payment Form -->
+      <div class="collapse mt-4" id="addPaymentForm">
+        <h6 class="fw-bold mb-3">Add New Payment</h6>
+        <form method="POST" action="{{ url_for('add_payment') }}">
+          <div class="mb-3">
+            <label class="form-label">Member</label>
+            <select name="member_id" class="form-select" required>
+              <option value="">Select member</option>
+              {% for member in members %}
+              <option value="{{ member.ID }}">{{ member.Name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Month</label>
+            <input type="text" name="month" class="form-control" placeholder="e.g. July 2025" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Amount</label>
+            <input type="number" step="0.01" name="amount" class="form-control" required>
+          </div>
+          <button type="submit" class="btn btn-success">Add Payment</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Bootstrap Icons CDN -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+<!-- Bootstrap JS (if not in base.html) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}
